@@ -1,0 +1,40 @@
+# Xcode
+*.xcodeproj/xcuserdata/
+**/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcuserstate
+**/.swiftpm/xcode/xcuserdata/
+DerivedData/
+Archives/
+*.xcarchive
+*.xcresult
+*.app
+*.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Model files (too large for git — downloaded at runtime)
+*.litertlm
+*.xnnpack_cache
+
+# Profiling
+*.profraw
+*.profdata
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Xcode / build artifacts
+build/
+*.o
+*.a
+
+# Kiro specs (development artifacts)
+.kiro/

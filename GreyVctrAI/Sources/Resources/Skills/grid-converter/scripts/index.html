@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+<script>
+// MGRS/UTM/LatLong converter — based on proj4js/mgrs (MIT License)
+// https://github.com/proj4js/mgrs
+
+const ECC_SQ = 0.00669438;
+const K0 = 0.9996;
+const A = 6378137;
+const E_OFF = 500000;
+const N_OFF = 10000000;
+const ZW = 6;
+const HZW = 3;
+const COL_ORIG = 'AJSAJS';
+const ROW_ORIG = 'AFAFAF';
+const cA=65, cI=73, cO=79, cV=86, cZ=90;
+
+function degRad(d){return d*Math.PI/180}
+function radDeg(r){return r*180/Math.PI}
+
+function getZoneLetter(lat){
+  if(lat<=84&&lat>=72)return'X';
+  if(lat<72&&lat>=-80)return'CDEFGHJKLMNPQRSTUVWX'[Math.floor((lat+80)/8)];
+  return'Z';
+}
+
+function LLtoUTM(lat,lon){
+  const lr=degRad(lat),lonr=degRad(lon);
+  let zn=Math.floor((lon+180)/6)+1;
+  if(lon===180)zn=60;
+  if(lat>=56&&lat<64&&lon>=3&&lon<12)zn=32;
+  if(lat>=72&&lat<84){
+    if(lon>=0&&lon<9)zn=31;else if(lon>=9&&lon<21)zn=33;
+    else if(lon>=21&&lon<33)zn=35;else if(lon>=33&&lon<42)zn=37;
+  }
+  const lo=degRad((zn-1)*ZW-180+HZW);
+  const ep=ECC_SQ/(1-ECC_SQ);
+  const N=A/Math.sqrt(1-ECC_SQ*Math.sin(lr)*Math.sin(lr));
+  const T=Math.tan(lr)*Math.tan(lr);
+  const C=ep*Math.cos(lr)*Math.cos(lr);
+  const Av=Math.cos(lr)*(lonr-lo);
+  const M=A*((1-ECC_SQ/4-3*ECC_SQ*ECC_SQ/64-5*Math.pow(ECC_SQ,3)/256)*lr
+    -(3*ECC_SQ/8+3*ECC_SQ*ECC_SQ/32+45*Math.pow(ECC_SQ,3)/1024)*Math.sin(2*lr)
+    +(15*ECC_SQ*ECC_SQ/256+45*Math.pow(ECC_SQ,3)/1024)*Math.sin(4*lr)
+    -(35*Math.pow(ECC_SQ,3)/3072)*Math.sin(6*lr));
+  let e=K0*N*(Av+(1-T+C)*Math.pow(Av,3)/6+(5-18*T+T*T+72*C-58*ep)*Math.pow(Av,5)/120)+E_OFF;
+  let n=K0*(M+N*Math.tan(lr)*(Av*Av/2+(5-T+9*C+4*C*C)*Math.pow(Av,4)/24
+    +(61-58*T+T*T+600*C-330*ep)*Math.pow(Av,6)/720));
+  if(lat<0)n+=N_OFF;
+  return{easting:Math.trunc(e),northing:Math.trunc(n),zoneNumber:zn,zoneLetter:getZoneLetter(lat)};
+}
+
+function UTMtoLL(utm){
+  const{northing:un,easting:ue,zoneLetter:zl,zoneNumber:zn}=utm;
+  const e1=(1-Math.sqrt(1-ECC_SQ))/(1+Math.sqrt(1-ECC_SQ));
+  const x=ue-E_OFF;
+  let y=un;
+  if(zl<'N')y-=N_OFF;
+  const lo=(zn-1)*ZW-180+HZW;
+  const ep=ECC_SQ/(1-ECC_SQ);
+  const M=y/K0;
+  const mu=M/(A*(1-ECC_SQ/4-3*ECC_SQ*ECC_SQ/64-5*Math.pow(ECC_SQ,3)/256));
+  const p1=mu+(3*e1/2-27*Math.pow(e1,3)/32)*Math.sin(2*mu)
+    +(21*e1*e1/16-55*Math.pow(e1,4)/32)*Math.sin(4*mu)
+    +(151*Math.pow(e1,3)/96)*Math.sin(6*mu);
+  const N1=A/Math.sqrt(1-ECC_SQ*Math.sin(p1)*Math.sin(p1));
+  const T1=Math.tan(p1)*Math.tan(p1);
+  const C1=ep*Math.cos(p1)*Math.cos(p1);
+  const R1=A*(1-ECC_SQ)/Math.pow(1-ECC_SQ*Math.sin(p1)*Math.sin(p1),1.5);
+  const D=x/(N1*K0);
+  const lat=p1-(N1*Math.tan(p1)/R1)*(D*D/2-(5+3*T1+10*C1-4*C1*C1-9*ep)*Math.pow(D,4)/24
+    +(61+90*T1+298*C1+45*T1*T1-252*ep-3*C1*C1)*Math.pow(D,6)/720);
+  const lon=(D-(1+2*T1+C1)*Math.pow(D,3)/6
+    +(5-2*C1+28*T1-3*C1*C1+8*ep+24*T1*T1)*Math.pow(D,5)/120)/Math.cos(p1);
+  return{lat:radDeg(lat),lon:lo+radDeg(lon)};
+}
+
+// MGRS encode/decode
+function get100kSet(z){let s=z%6;return s===0?6:s}
+
+function get100kID(e,n,z){
+  const s=get100kSet(z);
+  const co=COL_ORIG.charCodeAt(s-1),ro=ROW_ORIG.charCodeAt(s-1);
+  let ci=co+Math.floor(e/100000)-1,ri=ro+Math.floor(n/100000)%20;
+  let roll=false;
+  if(ci>cZ){ci=ci-cZ+cA-1;roll=true}
+  if(ci===cI||(co<cI&&ci>cI)||((ci>cI||co<cI)&&roll))ci++;
+  if(ci===cO||(co<cO&&ci>cO)||((ci>cO||co<cO)&&roll)){ci++;if(ci===cI)ci++}
+  if(ci>cZ)ci=ci-cZ+cA-1;
+  roll=false;
+  if(ri>cV){ri=ri-cV+cA-1;roll=true}
+  if(ri===cI||(ro<cI&&ri>cI)||((ri>cI||ro<cI)&&roll))ri++;
+  if(ri===cO||(ro<cO&&ri>cO)||((ri>cO||ro<cO)&&roll)){ri++;if(ri===cI)ri++}
+  if(ri>cV)ri=ri-cV+cA-1;
+  return String.fromCharCode(ci)+String.fromCharCode(ri);
+}
+
+function encMGRS(utm,acc){
+  acc=acc||5;
+  const se=('00000'+utm.easting),sn=('00000'+utm.northing);
+  return utm.zoneNumber+utm.zoneLetter+get100kID(utm.easting,utm.northing,utm.zoneNumber)
+    +se.substr(se.length-5,acc)+sn.substr(sn.length-5,acc);
+}
+
+function getEasting(c,set){
+  let cur=COL_ORIG.charCodeAt(set-1),v=100000,rw=false;
+  while(cur!==c.charCodeAt(0)){
+    cur++;if(cur===cI)cur++;if(cur===cO)cur++;
+    if(cur>cZ){if(rw)throw new Error('Bad char: '+c);cur=cA;rw=true}
+    v+=100000;
+  }
+  return v;
+}
+
+function getNorthing(c,set){
+  let cur=ROW_ORIG.charCodeAt(set-1),v=0,rw=false;
+  while(cur!==c.charCodeAt(0)){
+    cur++;if(cur===cI)cur++;if(cur===cO)cur++;
+    if(cur>cV){if(rw)throw new Error('Bad char: '+c);cur=cA;rw=true}
+    v+=100000;
+  }
+  return v;
+}
+
+const MIN_N={C:1100000,D:2000000,E:2800000,F:3700000,G:4600000,H:5500000,
+  J:6400000,K:7300000,L:8200000,M:9100000,N:0,P:800000,Q:1700000,
+  R:2600000,S:3500000,T:4400000,U:5300000,V:6200000,W:7000000,X:7900000};
+
+function decMGRS(s){
+  s=s.replace(/ /g,'').toUpperCase();
+  let i=0,sb='';
+  while(i<s.length&&!(/[A-Z]/).test(s[i]))sb+=s[i++];
+  const zn=parseInt(sb,10);
+  const zl=s[i++];
+  const h=s.substring(i,i+=2);
+  const set=get100kSet(zn);
+  let e100=getEasting(h[0],set),n100=getNorthing(h[1],set);
+  while(n100<MIN_N[zl])n100+=2000000;
+  const rem=s.length-i;
+  if(rem%2!==0)throw new Error('MGRS must have even digits after grid letters');
+  const sep=rem/2,bonus=100000/Math.pow(10,sep);
+  const east=parseFloat(s.substring(i,i+sep))*bonus+e100;
+  const north=parseFloat(s.substring(i+sep))*bonus+n100;
+  return{easting:east,northing:north,zoneLetter:zl,zoneNumber:zn,accuracy:bonus};
+}
+
+function fmtMGRS(s){
+  s=s.replace(/ /g,'');
+  const m=s.match(/^(\d{1,2}[A-Z])([A-Z]{2})(\d+)$/);
+  if(!m)return s;
+  const d=m[3],h=d.length/2;
+  return m[1]+' '+m[2]+' '+d.substring(0,h)+' '+d.substring(h);
+}
+
+function round(v,d){const f=Math.pow(10,d);return Math.round(v*f)/f}
+
+// Main entry point for AI Edge Gallery
+window.ai_edge_gallery_get_result = async function(dataStr) {
+  try {
+    const d = JSON.parse(dataStr);
+    const c = d.conversion;
+
+    if (c === 'mgrs_to_ll') {
+      const utm = decMGRS(d.mgrs);
+      const ll = UTMtoLL(utm);
+      return JSON.stringify({result: {lat:round(ll.lat,6), lon:round(ll.lon,6)}});
+    }
+    if (c === 'll_to_mgrs') {
+      if(d.lat<-80||d.lat>84) return JSON.stringify({error:'Latitude must be between -80 and 84 for MGRS'});
+      const utm = LLtoUTM(d.lat, d.lon);
+      return JSON.stringify({result: {mgrs: fmtMGRS(encMGRS(utm))}});
+    }
+    if (c === 'll_to_utm') {
+      if(d.lat<-80||d.lat>84) return JSON.stringify({error:'Latitude must be between -80 and 84 for UTM'});
+      const utm = LLtoUTM(d.lat, d.lon);
+      return JSON.stringify({result: {zoneNumber:utm.zoneNumber, zoneLetter:utm.zoneLetter, easting:utm.easting, northing:utm.northing}});
+    }
+    if (c === 'utm_to_ll') {
+      const ll = UTMtoLL({northing:d.northing, easting:d.easting, zoneLetter:d.zoneLetter, zoneNumber:d.zoneNumber});
+      return JSON.stringify({result: {lat:round(ll.lat,6), lon:round(ll.lon,6)}});
+    }
+    if (c === 'mgrs_to_utm') {
+      const utm = decMGRS(d.mgrs);
+      return JSON.stringify({result: {zoneNumber:utm.zoneNumber, zoneLetter:utm.zoneLetter, easting:utm.easting, northing:utm.northing}});
+    }
+    if (c === 'utm_to_mgrs') {
+      const mgrs = encMGRS({easting:d.easting, northing:d.northing, zoneNumber:d.zoneNumber, zoneLetter:d.zoneLetter});
+      return JSON.stringify({result: {mgrs: fmtMGRS(mgrs)}});
+    }
+    return JSON.stringify({error:'Unknown conversion: '+c+'. Use: mgrs_to_ll, ll_to_mgrs, ll_to_utm, utm_to_ll, mgrs_to_utm, utm_to_mgrs'});
+  } catch(e) {
+    return JSON.stringify({error: e.message});
+  }
+};
+</script>
+</body>
+</html>

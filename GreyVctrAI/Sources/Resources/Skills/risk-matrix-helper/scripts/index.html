@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+<script>
+// Draft risk matrix helper for AI Edge Gallery skills.
+// Matrix follows public Army/Air Force-style RM conventions:
+// severity I-IV, probability A-E, risk EH/H/M/L.
+
+const RISK_MATRIX = {
+  I: { A: 'EH', B: 'EH', C: 'H', D: 'H', E: 'M' },
+  II: { A: 'EH', B: 'H', C: 'H', D: 'M', E: 'L' },
+  III: { A: 'H', B: 'M', C: 'M', D: 'L', E: 'L' },
+  IV: { A: 'M', B: 'L', C: 'L', D: 'L', E: 'L' }
+};
+
+const SEVERITY_LABELS = {
+  I: 'Catastrophic',
+  II: 'Critical',
+  III: 'Moderate',
+  IV: 'Negligible'
+};
+
+const PROBABILITY_LABELS = {
+  A: 'Frequent',
+  B: 'Likely',
+  C: 'Occasional',
+  D: 'Seldom',
+  E: 'Unlikely/Rarely'
+};
+
+const RISK_LABELS = {
+  EH: 'Extremely High',
+  H: 'High',
+  M: 'Medium',
+  L: 'Low'
+};
+
+const RISK_ORDER = { EH: 4, H: 3, M: 2, L: 1, UNKNOWN: 0 };
+
+function normalizeSeverity(value) {
+  if (value === undefined || value === null) return '';
+  const v = String(value).trim().toUpperCase();
+  const words = {
+    CATASTROPHIC: 'I',
+    CRITICAL: 'II',
+    MODERATE: 'III',
+    NEGLIGIBLE: 'IV',
+    '1': 'I',
+    '2': 'II',
+    '3': 'III',
+    '4': 'IV'
+  };
+  return words[v] || v;
+}
+
+function normalizeProbability(value) {
+  if (value === undefined || value === null) return '';
+  const v = String(value).trim().toUpperCase();
+  const words = {
+    FREQUENT: 'A',
+    LIKELY: 'B',
+    OCCASIONAL: 'C',
+    SELDOM: 'D',
+    UNLIKELY: 'E',
+    RARELY: 'E'
+  };
+  return words[v] || v;
+}
+
+function calcRisk(severityValue, probabilityValue) {
+  const severity = normalizeSeverity(severityValue);
+  const probability = normalizeProbability(probabilityValue);
+  const errors = [];
+
+  if (!severity) errors.push('Missing severity');
+  else if (!RISK_MATRIX[severity]) errors.push('Invalid severity: ' + severityValue);
+
+  if (!probability) errors.push('Missing probability');
+  else if (!['A', 'B', 'C', 'D', 'E'].includes(probability)) errors.push('Invalid probability: ' + probabilityValue);
+
+  if (errors.length) {
+    return {
+      severity,
+      severityLabel: SEVERITY_LABELS[severity] || 'Unknown',
+      probability,
+      probabilityLabel: PROBABILITY_LABELS[probability] || 'Unknown',
+      risk: 'UNKNOWN',
+      riskLabel: 'Unknown / needs confirmation',
+      errors
+    };
+  }
+
+  const risk = RISK_MATRIX[severity][probability];
+  return {
+    severity,
+    severityLabel: SEVERITY_LABELS[severity],
+    probability,
+    probabilityLabel: PROBABILITY_LABELS[probability],
+    risk,
+    riskLabel: RISK_LABELS[risk],
+    errors: []
+  };
+}
+
+function cleanList(value) {
+  if (Array.isArray(value)) {
+    return value.map(x => String(x).trim()).filter(Boolean);
+  }
+  if (typeof value === 'string' && value.trim()) {
+    return value.split(/\n|;/).map(x => x.trim()).filter(Boolean);
+  }
+  return [];
+}
+
+function summarizeCounts(items, field) {
+  const counts = { EH: 0, H: 0, M: 0, L: 0, UNKNOWN: 0 };
+  items.forEach(item => {
+    const risk = item[field] && item[field].risk ? item[field].risk : 'UNKNOWN';
+    counts[risk] = (counts[risk] || 0) + 1;
+  });
+  return counts;
+}
+
+function highestRisk(items, field) {
+  let highest = 'UNKNOWN';
+  items.forEach(item => {
+    const risk = item[field] && item[field].risk ? item[field].risk : 'UNKNOWN';
+    if (RISK_ORDER[risk] > RISK_ORDER[highest]) highest = risk;
+  });
+  return { risk: highest, riskLabel: RISK_LABELS[highest] || 'Unknown / needs confirmation' };
+}
+
+function normalizeHazard(raw, index) {
+  const controls = cleanList(raw.controls);
+  const initial = calcRisk(raw.initialSeverity, raw.initialProbability);
+  const residual = calcRisk(raw.residualSeverity, raw.residualProbability);
+  const issues = [];
+
+  if (!raw.hazard || !String(raw.hazard).trim()) issues.push('Missing hazard description');
+  if (!controls.length) issues.push('Missing controls');
+  if (!raw.owner || !String(raw.owner).trim()) issues.push('Missing owner');
+  initial.errors.forEach(e => issues.push('Initial risk: ' + e));
+  residual.errors.forEach(e => issues.push('Residual risk: ' + e));
+
+  return {
+    id: index + 1,
+    hazard: raw.hazard ? String(raw.hazard).trim() : 'Unknown / needs confirmation',
+    cause: raw.cause ? String(raw.cause).trim() : '',
+    effect: raw.effect ? String(raw.effect).trim() : '',
+    controls,
+    owner: raw.owner ? String(raw.owner).trim() : 'Unknown / needs confirmation',
+    status: raw.status ? String(raw.status).trim() : 'Unknown / needs confirmation',
+    notes: raw.notes ? String(raw.notes).trim() : '',
+    initial,
+    residual,
+    issues
+  };
+}
+
+function riskText(risk) {
+  if (!risk || risk.risk === 'UNKNOWN') return 'Unknown / needs confirmation';
+  return risk.severity + '/' + risk.probability + ' - ' + risk.riskLabel;
+}
+
+function lineList(items) {
+  return items && items.length ? items.join('; ') : 'Unknown / needs confirmation';
+}
+
+function formatMobileText(result) {
+  const lines = [];
+  lines.push('Draft Risk Matrix Summary');
+  lines.push('');
+  lines.push('Basis');
+  lines.push('- Matrix: Severity I-IV plus Probability A-E');
+  lines.push('- Risk levels: EH, H, M, L');
+  lines.push('- Draft helper only. Verify through official channels.');
+  lines.push('');
+  lines.push('Overall');
+  lines.push('- Highest initial risk: ' + result.summary.highestInitialRisk.riskLabel);
+  lines.push('- Highest residual risk: ' + result.summary.highestResidualRisk.riskLabel);
+  lines.push('- Hazard count: ' + result.summary.hazardCount);
+  lines.push('- Missing data items: ' + result.summary.missingDataCount);
+  lines.push('');
+  lines.push('Hazards');
+
+  result.hazards.forEach((item, idx) => {
+    lines.push('');
+    lines.push((idx + 1) + '. ' + item.hazard);
+    lines.push('- Initial: ' + riskText(item.initial));
+    lines.push('- Residual: ' + riskText(item.residual));
+    lines.push('- Controls: ' + lineList(item.controls));
+    lines.push('- Owner: ' + item.owner);
+    lines.push('- Status: ' + item.status);
+    if (item.notes) lines.push('- Notes: ' + item.notes);
+    if (item.issues.length) lines.push('- Needs confirmation: ' + item.issues.join('; '));
+  });
+
+  if (result.missingData.length) {
+    lines.push('');
+    lines.push('Items Needing Confirmation');
+    result.missingData.forEach(item => {
+      lines.push('- ' + item.hazard + ': ' + item.issues.join('; '));
+    });
+  }
+
+  lines.push('');
+  lines.push('Official Verification');
+  lines.push('- Draft for human review.');
+  lines.push('- Verify against current Service policy, DD Form 2977 or applicable form, local SOP, safety office, supervisor, and commander guidance.');
+  return lines.join('\n');
+}
+
+window.ai_edge_gallery_get_result = async function(dataStr) {
+  try {
+    const data = JSON.parse(dataStr);
+    const hazards = Array.isArray(data.hazards) ? data.hazards : [];
+    if (!hazards.length) {
+      return JSON.stringify({ error: 'Provide a hazards array with at least one hazard.' });
+    }
+
+    const normalized = hazards.map(normalizeHazard);
+    normalized.sort((a, b) => {
+      const residualDiff = RISK_ORDER[b.residual.risk] - RISK_ORDER[a.residual.risk];
+      if (residualDiff !== 0) return residualDiff;
+      return RISK_ORDER[b.initial.risk] - RISK_ORDER[a.initial.risk];
+    });
+
+    const missingData = normalized
+      .filter(item => item.issues.length)
+      .map(item => ({ id: item.id, hazard: item.hazard, issues: item.issues }));
+
+    const result = {
+      referenceBasis: {
+        severity: SEVERITY_LABELS,
+        probability: PROBABILITY_LABELS,
+        riskLevels: RISK_LABELS,
+        matrix: RISK_MATRIX
+      },
+      summary: {
+        hazardCount: normalized.length,
+        initialCounts: summarizeCounts(normalized, 'initial'),
+        residualCounts: summarizeCounts(normalized, 'residual'),
+        highestInitialRisk: highestRisk(normalized, 'initial'),
+        highestResidualRisk: highestRisk(normalized, 'residual'),
+        missingDataCount: missingData.length
+      },
+      hazards: normalized,
+      missingData,
+      caveat: 'Draft helper only. Verify against current Service policy, DD Form 2977 or applicable form, local SOP, safety office, supervisor, and commander guidance.'
+    };
+    result.mobileText = formatMobileText(result);
+
+    return JSON.stringify({ result });
+  } catch (e) {
+    return JSON.stringify({ error: e.message });
+  }
+};
+</script>
+</body>
+</html>

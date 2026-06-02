@@ -1,0 +1,100 @@
+name: GreyVctrAI
+options:
+  bundleIdPrefix: com.guardai
+  deploymentTarget:
+    iOS: "26.0"
+  xcodeVersion: "16.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    ALLOW_TARGET_PLATFORM_SPECIALIZATION: YES
+
+packages:
+  LiteRT-LM:
+    url: https://github.com/google-ai-edge/LiteRT-LM.git
+    revision: "a0afb5a56acd106b23a2b2385b8469834dc268c0"
+  swift-markdown-ui:
+    url: https://github.com/gonzalezreal/swift-markdown-ui.git
+    from: "2.4.0"
+  LaTeXSwiftUI:
+    url: https://github.com/colinc86/LaTeXSwiftUI.git
+    from: "2.0.0"
+
+targets:
+  GreyVctrAI:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+        excludes:
+          - "Resources/**"
+          - "Assets.xcassets/**"
+      - path: Sources/Assets.xcassets
+        buildPhase: resources
+      - path: Sources/Resources/Skills
+        buildPhase: resources
+        type: folder
+      - path: Sources/Resources/inference_config.json
+        buildPhase: resources
+    dependencies:
+      - package: LiteRT-LM
+        product: LiteRTLM
+        linkType: dynamic
+      - package: swift-markdown-ui
+        product: MarkdownUI
+      - package: LaTeXSwiftUI
+        product: LaTeXSwiftUI
+    settings:
+      base:
+        PRODUCT_NAME: "GreyVctr AI"
+        PRODUCT_MODULE_NAME: GreyVctrAI
+        PRODUCT_BUNDLE_IDENTIFIER: com.guardai.ios
+        MARKETING_VERSION: "1.0.1"
+        CURRENT_PROJECT_VERSION: "68"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
+        INFOPLIST_KEY_CFBundleDisplayName: "GreyVctr AI"
+        INFOPLIST_KEY_CFBundleName: "GreyVctr AI"
+        INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
+        INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.productivity"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGN_ENTITLEMENTS: Sources/GreyVctrAI.entitlements
+        DEVELOPMENT_TEAM: C8BDQ98823
+        SWIFT_PACKAGE_ALLOW_UNSAFE_FLAGS: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_NSCameraUsageDescription: "GreyVctr AI needs camera access for the Ask Image feature."
+        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "GreyVctr AI needs photo library access for the Ask Image feature."
+        OTHER_LDFLAGS:
+          - "-lc++"
+
+  GreyVctrAITests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+    dependencies:
+      - target: GreyVctrAI
+
+schemes:
+  GreyVctrAI:
+    build:
+      targets:
+        GreyVctrAI: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - GreyVctrAITests
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
