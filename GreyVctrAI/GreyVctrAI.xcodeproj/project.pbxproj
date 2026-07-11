@@ -538,7 +538,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Sources/GreyVctrAI.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 68;
+				CURRENT_PROJECT_VERSION = 70;
 				DEVELOPMENT_TEAM = C8BDQ98823;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "GreyVctr AI";
@@ -633,7 +633,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Sources/GreyVctrAI.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 68;
+				CURRENT_PROJECT_VERSION = 70;
 				DEVELOPMENT_TEAM = C8BDQ98823;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "GreyVctr AI";
@@ -767,7 +767,7 @@
 			repositoryURL = "https://github.com/google-ai-edge/LiteRT-LM.git";
 			requirement = {
 				kind = revision;
-				revision = a0afb5a56acd106b23a2b2385b8469834dc268c0;
+				revision = f73637c57f0940b53da184e0d5adfc52a4e55eef;
 			};
 		};
 		3E53443363977F146BD8D1EA /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {

@@ -14,7 +14,7 @@ settings:
 packages:
   LiteRT-LM:
     url: https://github.com/google-ai-edge/LiteRT-LM.git
-    revision: "a0afb5a56acd106b23a2b2385b8469834dc268c0"
+    revision: "f73637c57f0940b53da184e0d5adfc52a4e55eef"
   swift-markdown-ui:
     url: https://github.com/gonzalezreal/swift-markdown-ui.git
     from: "2.4.0"
@@ -52,7 +52,7 @@ targets:
         PRODUCT_MODULE_NAME: GreyVctrAI
         PRODUCT_BUNDLE_IDENTIFIER: com.guardai.ios
         MARKETING_VERSION: "1.0.1"
-        CURRENT_PROJECT_VERSION: "68"
+        CURRENT_PROJECT_VERSION: "70"
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
         INFOPLIST_KEY_CFBundleDisplayName: "GreyVctr AI"

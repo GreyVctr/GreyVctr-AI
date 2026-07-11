@@ -16,7 +16,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/gonzalezreal/swift-markdown-ui.git", from: "2.4.0"),
         .package(url: "https://github.com/colinc86/LaTeXSwiftUI.git", from: "2.0.0"),
-        .package(url: "https://github.com/google-ai-edge/LiteRT-LM.git", revision: "a0afb5a56acd106b23a2b2385b8469834dc268c0")
+        .package(url: "https://github.com/google-ai-edge/LiteRT-LM.git", revision: "f73637c57f0940b53da184e0d5adfc52a4e55eef")
     ],
     targets: [
         .target(
