@@ -13,7 +13,8 @@ settings:
 
 packages:
   LiteRT-LM:
-    path: Vendor/LiteRT-LM
+    url: https://github.com/google-ai-edge/LiteRT-LM.git
+    revision: "f73637c57f0940b53da184e0d5adfc52a4e55eef"
   swift-markdown-ui:
     url: https://github.com/gonzalezreal/swift-markdown-ui.git
     from: "2.4.0"

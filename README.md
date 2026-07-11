@@ -102,7 +102,7 @@ flowchart LR
 
 | Dependency | Purpose | License |
 |-----------|---------|---------|
-| [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM) | Google's official Swift SDK for on-device LLM inference. Integrated via a local SPM wrapper package under `GreyVctrAI/Vendor/LiteRT-LM`, based on commit `80f301f` for v0.14.0. The local wrapper keeps the branch buildable while v0.14.0's released Swift sources and binary framework headers disagree on the streaming callback type. Provides Engine actor, Conversation class, Tool protocol with `@ToolParam` property wrapper, multi-turn KV cache, token streaming, and GPU Metal acceleration. | Apache 2.0 |
+| [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM) | Google's official Swift SDK for on-device LLM inference. Integrated via SPM (`revision:` pinned to commit `f73637c` on the v0.14.0 release branch). Uses `revision` instead of version tag because the `v0.14.0` tag still points at the original release commit while the release branch contains the Swift binary checksum fix. Provides Engine actor, Conversation class, Tool protocol with `@ToolParam` property wrapper, multi-turn KV cache, token streaming, and GPU Metal acceleration. | Apache 2.0 |
 | [Gemma 4 E2B](https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm) | On-device LLM model (~2.6 GB, downloaded at runtime) | Apache 2.0 |
 | [Guard Skills](https://github.com/GreyVctr/google-ai-edge-guard-skills) | National Guard skill definitions (bundled, with local README/format adjustments for this app) | Apache 2.0 |
 | [swift-markdown-ui](https://github.com/gonzalezreal/swift-markdown-ui) | Primary GitHub-flavored Markdown renderer for model responses | MIT |
@@ -272,7 +272,7 @@ The Gemma 4 E2B `.litertlm` file is downloaded at runtime from Hugging Face and 
 GreyVctr AI tracks the installed model using a local metadata file that records the Hugging Face commit used for the download. The app target model is commit `3f25054`. If the local model is missing metadata or was installed from an older known commit such as `6e5c4f1`, Settings shows an available model update and asks the user to update.
 
 > **Important**: Do not update the model commit or SDK revision independently. They must be tested together. The pinned pair is:
-> - SDK: `80f301f` (v0.14.0)
+> - SDK: `f73637c` (v0.14.0 release branch)
 > - Model: `3f25054`
 
 Updating downloads the target model, replaces the local `.litertlm` file, and reloads the LiteRT-LM engine.
@@ -382,11 +382,13 @@ Run this after adding/removing source files. XcodeGen automatically picks up all
 
 ### SPM dependency note
 
-LiteRT-LM is referenced through `Vendor/LiteRT-LM`, a small local package based on the v0.14.0 release commit `80f301f...`, because the official v0.14.0 Swift wrapper does not compile against the v0.14.0 binary framework headers. The local wrapper updates the streaming callback bridge to the binary framework's `LiteRtLmStreamChunk` API while continuing to download Google's official v0.14.0 binary artifacts.
+LiteRT-LM is referenced via `revision: "f73637c..."` (the v0.14.0 release branch commit with corrected Swift binary artifact checksums) because:
 
 Tracked upstream as [google-ai-edge/LiteRT-LM#2780](https://github.com/google-ai-edge/LiteRT-LM/issues/2780).
 
-When Google publishes a fixed release, replace the local package with a remote `revision:` pin again so SDK/model compatibility remains explicit while this app validates LiteRT-LM releases on physical iOS hardware.
+1. The package uses unsafe build flags (linker flags for the C++ runtime). SPM only allows unsafe flags in branch/commit-based dependencies, not version-pinned ones.
+2. Exact revisions keep the SDK/model compatibility pair explicit while this app validates LiteRT-LM releases on physical iOS hardware.
+3. The `v0.14.0` tag still points at the original `80f301f...` release commit; the fixed release branch commit is `f73637c...`.
 
 Package resolution requires `GIT_LFS_SKIP_SMUDGE=1` to bypass broken LFS downloads for dylibs that aren't used by the actual build (the xcframework provides the needed binaries). Once Google publishes a release that resolves both the unsafe flags restriction and the LFS hosting, we can switch to `from: "X.Y.Z"`.
 

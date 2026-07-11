@@ -1,4 +1,5 @@
 {
+  "originHash" : "ea58de170957fb80680bb29c4b785cc0ba7a227b1a7bab5698bda12ec4118e3b",
   "pins" : [
     {
       "identity" : "latexswiftui",
@@ -7,6 +8,14 @@
       "state" : {
         "revision" : "cc677f66b9cc1751e09207621d62d1cda0200675",
         "version" : "2.0.0"
+      }
+    },
+    {
+      "identity" : "litert-lm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/google-ai-edge/LiteRT-LM.git",
+      "state" : {
+        "revision" : "f73637c57f0940b53da184e0d5adfc52a4e55eef"
       }
     },
     {
@@ -64,5 +73,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

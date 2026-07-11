@@ -131,7 +131,6 @@
 		BCE60872F90339295F57EFE2 /* AskImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskImageViewModel.swift; sourceTree = "<group>"; };
 		C519CEA15EAA08D4E005DE95 /* HistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStore.swift; sourceTree = "<group>"; };
 		C9F47923559BF154343A645C /* AskImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskImageView.swift; sourceTree = "<group>"; };
-		CA1E771324D2DC5AA7201690 /* LiteRT-LM */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "LiteRT-LM"; path = "Vendor/LiteRT-LM"; sourceTree = SOURCE_ROOT; };
 		CAF88F19C00AFCC4E6D14286 /* ThinkingBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThinkingBubble.swift; sourceTree = "<group>"; };
 		CE8B782DE3CA36EE2DFFC108 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
 		CF33D2F7C22854604629ACB1 /* AppMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMode.swift; sourceTree = "<group>"; };
@@ -164,14 +163,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1F9B6347D76FBCEE3ACA4575 /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				CA1E771324D2DC5AA7201690 /* LiteRT-LM */,
-			);
-			name = Packages;
-			sourceTree = "<group>";
-		};
 		355C61D580913B81B2B72162 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -210,7 +201,6 @@
 			isa = PBXGroup;
 			children = (
 				B200D35EB7195CC470211A82 /* Skills */,
-				1F9B6347D76FBCEE3ACA4575 /* Packages */,
 				49748FA19CD9546499E9E357 /* Resources */,
 				DDC2BD9A00D6F2AD3127A4CB /* Sources */,
 				355C61D580913B81B2B72162 /* Tests */,
@@ -403,8 +393,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				7B12F8BDF65E6E109E8B2827 /* XCRemoteSwiftPackageReference "LaTeXSwiftUI" */,
+				1E93803C6D663C3ACC9A746D /* XCRemoteSwiftPackageReference "LiteRT-LM" */,
 				3E53443363977F146BD8D1EA /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
-				DF37666343D19ACF61622DD5 /* XCLocalSwiftPackageReference "Vendor/LiteRT-LM" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 84D6D2F4436A835EAC88BF0E /* Products */;
@@ -771,14 +761,15 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		DF37666343D19ACF61622DD5 /* XCLocalSwiftPackageReference "Vendor/LiteRT-LM" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "Vendor/LiteRT-LM";
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
+		1E93803C6D663C3ACC9A746D /* XCRemoteSwiftPackageReference "LiteRT-LM" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google-ai-edge/LiteRT-LM.git";
+			requirement = {
+				kind = revision;
+				revision = f73637c57f0940b53da184e0d5adfc52a4e55eef;
+			};
+		};
 		3E53443363977F146BD8D1EA /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui.git";
@@ -805,6 +796,7 @@
 		};
 		C62F647EE0518060ED8D8BEA /* LiteRTLM */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 1E93803C6D663C3ACC9A746D /* XCRemoteSwiftPackageReference "LiteRT-LM" */;
 			productName = LiteRTLM;
 		};
 		CA0092E0D494DC373FBE1A27 /* LaTeXSwiftUI */ = {
