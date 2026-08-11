@@ -467,7 +467,7 @@ struct SettingsView: View {
     }
 
     private var liteRTLMVersionDisplay: String {
-        "v0.15.0"
+        "v0.16.0"
     }
 
     private var modelVersionDisplay: String {
