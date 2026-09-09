@@ -16,7 +16,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/gonzalezreal/swift-markdown-ui.git", from: "2.4.0"),
         .package(url: "https://github.com/colinc86/LaTeXSwiftUI.git", from: "2.0.0"),
-        .package(url: "https://github.com/google-ai-edge/LiteRT-LM.git", exact: "0.16.1")
+        .package(path: "Packages/LiteRTLM")
     ],
     targets: [
         .target(
@@ -24,7 +24,7 @@ let package = Package(
             dependencies: [
                 .product(name: "MarkdownUI", package: "swift-markdown-ui"),
                 .product(name: "LaTeXSwiftUI", package: "LaTeXSwiftUI"),
-                .product(name: "LiteRTLM", package: "LiteRT-LM")
+                .product(name: "LiteRTLM", package: "LiteRTLM")
             ],
             path: "Sources",
             resources: [

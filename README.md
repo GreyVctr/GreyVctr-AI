@@ -102,7 +102,7 @@ flowchart LR
 
 | Dependency | Purpose | License |
 |-----------|---------|---------|
-| [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM) | Google's official Swift SDK for on-device LLM inference. Integrated via SPM and pinned to the exact `v0.16.1` release. Provides Engine actor, Conversation class, Tool protocol with `@ToolParam` property wrapper, multi-turn KV cache, token streaming, and GPU Metal acceleration. | Apache 2.0 |
+| [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM) | Google's official Swift SDK for on-device LLM inference. Integrated through a local SPM wrapper pinned to the `v0.17.0` Swift sources and binary artifacts. Provides Engine actor, Conversation class, Tool protocol with `@ToolParam` property wrapper, multi-turn KV cache, token streaming, and GPU Metal acceleration. | Apache 2.0 |
 | [Gemma 4 E2B](https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm) | On-device LLM model (~2.6 GB, downloaded at runtime) | Apache 2.0 |
 | [Guard Skills](https://github.com/GreyVctr/google-ai-edge-guard-skills) | National Guard skill definitions (bundled, with local README/format adjustments for this app) | Apache 2.0 |
 | [swift-markdown-ui](https://github.com/gonzalezreal/swift-markdown-ui) | Primary GitHub-flavored Markdown renderer for model responses | MIT |
@@ -123,13 +123,11 @@ flowchart LR
 git clone https://github.com/GreyVctr/GreyVctr-AI.git
 cd GreyVctr-AI/GreyVctrAI
 xcodegen generate
-GIT_LFS_SKIP_SMUDGE=1 swift package resolve
+xcodebuild -resolvePackageDependencies -project GreyVctrAI.xcodeproj -scheme GreyVctrAI
 open GreyVctrAI.xcodeproj
 ```
 
 > Requires [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`). The `.xcodeproj` is generated from `project.yml` — run `xcodegen generate` after cloning or adding/removing source files.
->
-> The `GIT_LFS_SKIP_SMUDGE=1` flag is required because LiteRT-LM's repo uses Git LFS for prebuilt dylibs, and GitHub's LFS storage intermittently fails to serve these objects. The actual xcframework used by the build is separate from the LFS-tracked files.
 
 ### 2. Configure signing
 
@@ -272,7 +270,7 @@ The Gemma 4 E2B `.litertlm` file is downloaded at runtime from Hugging Face and 
 GreyVctr AI tracks the installed model using a local metadata file that records the Hugging Face commit used for the download. The app target model is commit `3f25054`. If the local model is missing metadata or was installed from an older known commit such as `6e5c4f1`, Settings shows an available model update and asks the user to update.
 
 > **Important**: Do not update the model commit or SDK version independently. They must be tested together. The pinned pair is:
-> - SDK: `v0.16.1`
+> - SDK: `v0.17.0`
 > - Model: `3f25054`
 
 Updating downloads the target model, replaces the local `.litertlm` file, and reloads the LiteRT-LM engine.
@@ -382,12 +380,12 @@ Run this after adding/removing source files. XcodeGen automatically picks up all
 
 ### SPM dependency note
 
-LiteRT-LM is referenced as exact version `0.16.1`. This tag uses the v0.16.0 iOS and macOS XCFramework artifacts published directly from its Swift package and no longer uses the unsafe linker flags that required the app's previous commit-based v0.14.0 workaround. The original packaging problem is tracked in [google-ai-edge/LiteRT-LM#2780](https://github.com/google-ai-edge/LiteRT-LM/issues/2780).
+LiteRT-LM uses the local package at `GreyVctrAI/Packages/LiteRTLM`, containing the Swift wrapper sources from the exact `v0.17.0` release commit and binary targets for Google's published v0.17.0 iOS and macOS XCFrameworks. This is necessary because the published tag's `Package.swift` still references v0.16.0 binaries, which do not contain the native APIs required by the v0.17.0 Swift wrapper. Google's later package-only fix was made on a newer source revision that requires additional native APIs not present in the v0.17.0 binaries. The original Swift packaging problem is tracked in [google-ai-edge/LiteRT-LM#2780](https://github.com/google-ai-edge/LiteRT-LM/issues/2780).
 
-Resolve packages for the Xcode project from the terminal so Git LFS does not download repository artifacts that the app does not use. This is required after changing the LiteRT-LM pin; plain `swift package resolve` only populates SwiftPM's command-line build cache and can leave Xcode reporting a missing `LiteRTLM` package product:
+Resolve packages for the Xcode project from the terminal after changing the LiteRT-LM wrapper or artifact URLs. Plain `swift package resolve` only populates SwiftPM's command-line build cache and can leave Xcode reporting a missing `LiteRTLM` package product:
 > ```bash
 > cd GreyVctrAI
-> GIT_LFS_SKIP_SMUDGE=1 xcodebuild \
+> xcodebuild \
 >   -resolvePackageDependencies \
 >   -project GreyVctrAI.xcodeproj \
 >   -scheme GreyVctrAI

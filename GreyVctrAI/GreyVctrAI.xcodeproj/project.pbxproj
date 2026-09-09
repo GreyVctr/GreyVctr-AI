@@ -82,6 +82,7 @@
 /* Begin PBXFileReference section */
 		022D99517A4E005FF6972439 /* ToolCallMetadataParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolCallMetadataParser.swift; sourceTree = "<group>"; };
 		08E04339253CC7290D4CC1F2 /* BackgroundInferenceGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundInferenceGuard.swift; sourceTree = "<group>"; };
+		11F40774B8131A9F84077567 /* LiteRTLM */ = {isa = PBXFileReference; lastKnownFileType = folder; name = LiteRTLM; path = Packages/LiteRTLM; sourceTree = SOURCE_ROOT; };
 		1890423454C35FC34AE167F6 /* MarkdownMathDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownMathDetectorTests.swift; sourceTree = "<group>"; };
 		1AF9C6F6C5317A34701EC429 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		2B88DA1D88B902501F6DF0D8 /* AIChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIChatViewModel.swift; sourceTree = "<group>"; };
@@ -163,6 +164,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F9B6347D76FBCEE3ACA4575 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				11F40774B8131A9F84077567 /* LiteRTLM */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
 		355C61D580913B81B2B72162 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -201,6 +210,7 @@
 			isa = PBXGroup;
 			children = (
 				B200D35EB7195CC470211A82 /* Skills */,
+				1F9B6347D76FBCEE3ACA4575 /* Packages */,
 				49748FA19CD9546499E9E357 /* Resources */,
 				DDC2BD9A00D6F2AD3127A4CB /* Sources */,
 				355C61D580913B81B2B72162 /* Tests */,
@@ -393,8 +403,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				7B12F8BDF65E6E109E8B2827 /* XCRemoteSwiftPackageReference "LaTeXSwiftUI" */,
-				1E93803C6D663C3ACC9A746D /* XCRemoteSwiftPackageReference "LiteRT-LM" */,
 				3E53443363977F146BD8D1EA /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
+				C9810D71FD1AFD5406A6B2B2 /* XCLocalSwiftPackageReference "Packages/LiteRTLM" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 84D6D2F4436A835EAC88BF0E /* Products */;
@@ -538,7 +548,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Sources/GreyVctrAI.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 73;
+				CURRENT_PROJECT_VERSION = 74;
 				DEVELOPMENT_TEAM = C8BDQ98823;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "GreyVctr AI";
@@ -608,6 +618,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = x86_64;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -633,7 +644,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Sources/GreyVctrAI.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 73;
+				CURRENT_PROJECT_VERSION = 74;
 				DEVELOPMENT_TEAM = C8BDQ98823;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "GreyVctr AI";
@@ -703,6 +714,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = x86_64;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -761,15 +773,14 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		1E93803C6D663C3ACC9A746D /* XCRemoteSwiftPackageReference "LiteRT-LM" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/google-ai-edge/LiteRT-LM.git";
-			requirement = {
-				kind = exactVersion;
-				version = 0.16.1;
-			};
+/* Begin XCLocalSwiftPackageReference section */
+		C9810D71FD1AFD5406A6B2B2 /* XCLocalSwiftPackageReference "Packages/LiteRTLM" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/LiteRTLM;
 		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
 		3E53443363977F146BD8D1EA /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui.git";
@@ -796,7 +807,6 @@
 		};
 		C62F647EE0518060ED8D8BEA /* LiteRTLM */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1E93803C6D663C3ACC9A746D /* XCRemoteSwiftPackageReference "LiteRT-LM" */;
 			productName = LiteRTLM;
 		};
 		CA0092E0D494DC373FBE1A27 /* LaTeXSwiftUI */ = {

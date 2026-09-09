@@ -10,15 +10,6 @@
       }
     },
     {
-      "identity" : "litert-lm",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/google-ai-edge/LiteRT-LM.git",
-      "state" : {
-        "revision" : "924e79c91542761242244e4f1651851f822e4cbb",
-        "version" : "0.16.1"
-      }
-    },
-    {
       "identity" : "mathjaxswift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/colinc86/MathJaxSwift",
