@@ -102,7 +102,7 @@ flowchart LR
 
 | Dependency | Purpose | License |
 |-----------|---------|---------|
-| [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM) | Google's official Swift SDK for on-device LLM inference. Integrated through a local SPM wrapper pinned to the `v0.17.0` Swift sources and binary artifacts. Provides Engine actor, Conversation class, Tool protocol with `@ToolParam` property wrapper, multi-turn KV cache, token streaming, and GPU Metal acceleration. | Apache 2.0 |
+| [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM) | Google's official Swift SDK for on-device LLM inference. Integrated through a local SPM wrapper pinned to the `v0.17.1` Swift sources and binary artifacts. Provides Engine actor, Conversation class, Tool protocol with `@ToolParam` property wrapper, multi-turn KV cache, token streaming, and GPU Metal acceleration. | Apache 2.0 |
 | [Gemma 4 E2B](https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm) | On-device LLM model (~2.6 GB, downloaded at runtime) | Apache 2.0 |
 | [Guard Skills](https://github.com/GreyVctr/google-ai-edge-guard-skills) | National Guard skill definitions (bundled, with local README/format adjustments for this app) | Apache 2.0 |
 | [swift-markdown-ui](https://github.com/gonzalezreal/swift-markdown-ui) | Primary GitHub-flavored Markdown renderer for model responses | MIT |
@@ -270,7 +270,7 @@ The Gemma 4 E2B `.litertlm` file is downloaded at runtime from Hugging Face and 
 GreyVctr AI tracks the installed model using a local metadata file that records the Hugging Face commit used for the download. The app target model is commit `3f25054`. If the local model is missing metadata or was installed from an older known commit such as `6e5c4f1`, Settings shows an available model update and asks the user to update.
 
 > **Important**: Do not update the model commit or SDK version independently. They must be tested together. The pinned pair is:
-> - SDK: `v0.17.0`
+> - SDK: `v0.17.1`
 > - Model: `3f25054`
 
 Updating downloads the target model, replaces the local `.litertlm` file, and reloads the LiteRT-LM engine.
@@ -380,7 +380,9 @@ Run this after adding/removing source files. XcodeGen automatically picks up all
 
 ### SPM dependency note
 
-LiteRT-LM uses the local package at `GreyVctrAI/Packages/LiteRTLM`, containing the Swift wrapper sources from the exact `v0.17.0` release commit and binary targets for Google's published v0.17.0 iOS and macOS XCFrameworks. This is necessary because the published tag's `Package.swift` still references v0.16.0 binaries, which do not contain the native APIs required by the v0.17.0 Swift wrapper. Google's later package-only fix was made on a newer source revision that requires additional native APIs not present in the v0.17.0 binaries. The original Swift packaging problem is tracked in [google-ai-edge/LiteRT-LM#2780](https://github.com/google-ai-edge/LiteRT-LM/issues/2780).
+LiteRT-LM uses the local package at `GreyVctrAI/Packages/LiteRTLM`, with Swift wrapper sources from the `v0.17.1` release commit (`5e58e9a0aef7abf7091207a8b1d1063a1c800f08`) and binary targets for Google's published v0.17.1 iOS and macOS XCFrameworks. The wrapper retains two local compatibility adjustments: `Conversation` and `ToolManager` use `@unchecked Sendable`. The upstream Swift sources are otherwise unchanged from v0.17.0. The local package was introduced to work around the Swift packaging issue tracked in [google-ai-edge/LiteRT-LM#2780](https://github.com/google-ai-edge/LiteRT-LM/issues/2780).
+
+As verified on September 16, 2026, the [v0.17.1 release](https://github.com/google-ai-edge/LiteRT-LM/releases/tag/v0.17.1) republishes Apple XCFrameworks with the same SHA-256 checksums as v0.17.0; its upstream package manifest also still points at v0.17.0 binaries. Updating the release URLs therefore does not change the native Apple runtime or deliver the advertised tool-call integer fix. New upstream Apple artifacts are needed for that fix.
 
 Resolve packages for the Xcode project from the terminal after changing the LiteRT-LM wrapper or artifact URLs. Plain `swift package resolve` only populates SwiftPM's command-line build cache and can leave Xcode reporting a missing `LiteRTLM` package product:
 > ```bash

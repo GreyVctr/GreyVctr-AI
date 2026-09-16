@@ -9,7 +9,8 @@ struct ModelDownloadView: View {
     let downloader: ModelDownloader
     let onDownloadComplete: () -> Void
 
-    @State private var hasStarted = false
+    @State private var downloadError = ""
+    @State private var showsDownloadError = false
 
     var body: some View {
         VStack(spacing: 32) {
@@ -60,6 +61,26 @@ struct ModelDownloadView: View {
                 .padding(.horizontal, 32)
                 .padding(.bottom, 16)
         }
+        .alert("Download failed", isPresented: $showsDownloadError) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(downloadError)
+        }
+    }
+
+    @MainActor
+    private func downloadModel() async {
+        do {
+            try await downloader.download()
+            onDownloadComplete()
+        } catch is CancellationError {
+            // Pausing or cancelling leaves the downloader in its corresponding UI state.
+        } catch ModelDownloader.DownloadError.alreadyDownloading {
+            // The existing download will handle completion.
+        } catch {
+            downloadError = error.localizedDescription
+            showsDownloadError = true
+        }
     }
 
     // MARK: - State Sections
@@ -78,9 +99,7 @@ struct ModelDownloadView: View {
 
             Button {
                 Task {
-                    hasStarted = true
-                    try await downloader.download()
-                    await MainActor.run { onDownloadComplete() }
+                    await downloadModel()
                 }
             } label: {
                 Label("Download Model", systemImage: "arrow.down.circle.fill")
@@ -121,8 +140,7 @@ struct ModelDownloadView: View {
 
             Button {
                 Task {
-                    try await downloader.download()
-                    await MainActor.run { onDownloadComplete() }
+                    await downloadModel()
                 }
             } label: {
                 Label("Resume", systemImage: "play.circle.fill")
@@ -167,8 +185,7 @@ struct ModelDownloadView: View {
 
             Button {
                 Task {
-                    try await downloader.download()
-                    await MainActor.run { onDownloadComplete() }
+                    await downloadModel()
                 }
             } label: {
                 Label("Retry", systemImage: "arrow.clockwise.circle.fill")

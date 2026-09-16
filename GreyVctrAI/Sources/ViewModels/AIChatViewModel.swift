@@ -114,7 +114,7 @@ final class AIChatViewModel {
         defer { appState.endChatInputLock() }
 
         activeTask?.cancel()
-        activeTask = Task(priority: .userInitiated) { [sessionCoordinator, historyStore, logger] in
+        activeTask = Task(priority: .userInitiated) { [weak self, sessionCoordinator, historyStore, logger] in
             await Self.runSend(
                 state: stateSnapshot,
                 sessionCoordinator: sessionCoordinator,
