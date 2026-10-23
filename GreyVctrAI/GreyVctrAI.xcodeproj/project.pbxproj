@@ -90,13 +90,13 @@
 		3059388D47A8A70AEAA74257 /* AppDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencies.swift; sourceTree = "<group>"; };
 		3164921B034EADA2C3696D15 /* AskImageHistoryPersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskImageHistoryPersistenceTests.swift; sourceTree = "<group>"; };
 		352E1A507A77726606E29F00 /* InferenceConfigLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InferenceConfigLoader.swift; sourceTree = "<group>"; };
-		3802277EAE4778AC3E265E00 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		3802277EAE4778AC3E265E00 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		39C1D9EC97E352E80B614C03 /* ConversationStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStoreTests.swift; sourceTree = "<group>"; };
 		3B6D532C4A383EEF67B20449 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3CE7D8684CB7EEBB259C9A98 /* JSRuntimeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSRuntimeError.swift; sourceTree = "<group>"; };
-		3DE079B1305C2D988E8BCDF5 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		3DE079B1305C2D988E8BCDF5 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		3F27A60C1D6BD8E53DB5C173 /* inference_config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = inference_config.json; sourceTree = "<group>"; };
-		481998931D0EE39B873C7B63 /* GreyVctrAI.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = GreyVctrAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		481998931D0EE39B873C7B63 /* GreyVctr AI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GreyVctr AI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		49815FC096CCAD85B120804C /* UserSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsTests.swift; sourceTree = "<group>"; };
 		49E1574287F715C0CEA9CF54 /* ModelDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDownloader.swift; sourceTree = "<group>"; };
 		570528B3800667167910EAF4 /* ConversationResumeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationResumeListView.swift; sourceTree = "<group>"; };
@@ -115,17 +115,17 @@
 		82968F23F5E2EAE99251762A /* SkillDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillDefinition.swift; sourceTree = "<group>"; };
 		83C985BF9C64DC43C207A2FE /* HistoryConversationTranscriptParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryConversationTranscriptParser.swift; sourceTree = "<group>"; };
 		857897C7EF1D05B9C309CBE6 /* HistoryConversationTranscriptParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryConversationTranscriptParserTests.swift; sourceTree = "<group>"; };
-		85FA5C3FDF1FAF6532B8F55B /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
-		890E884D9AB19B7954A2CD2F /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
-		8ED731DA9E68AA1ED46030A3 /* GreyVctrAITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GreyVctrAITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		85FA5C3FDF1FAF6532B8F55B /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		890E884D9AB19B7954A2CD2F /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		8ED731DA9E68AA1ED46030A3 /* GreyVctrAITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GreyVctrAITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9012227F1E125E8E928EDFA6 /* SkillToolCallIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillToolCallIndicator.swift; sourceTree = "<group>"; };
 		902C4A90E5041B0D419E1CA6 /* ConversationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStore.swift; sourceTree = "<group>"; };
-		95DCE1E768E3EEF73391C0AD /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		95DCE1E768E3EEF73391C0AD /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		9F1D7D0E202A4A1678B6B9AB /* SkillsChatPreservationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillsChatPreservationTests.swift; sourceTree = "<group>"; };
 		9F7BECDA3A1A0ACB1CD56B7A /* SkillParseError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillParseError.swift; sourceTree = "<group>"; };
 		A921B2778A989BF86A58D92B /* ModelDownloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDownloadView.swift; sourceTree = "<group>"; };
 		A950AC2D82110779ED39C75F /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
-		A9675FF0BAD559ADFA0C3052 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		A9675FF0BAD559ADFA0C3052 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		AFE5A2EE7C2C0E2E7257F498 /* SkillsChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillsChatViewModel.swift; sourceTree = "<group>"; };
 		B200D35EB7195CC470211A82 /* Skills */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Skills; path = Sources/Resources/Skills; sourceTree = SOURCE_ROOT; };
 		BA2C69B7B166043A2686C15C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -133,7 +133,7 @@
 		C519CEA15EAA08D4E005DE95 /* HistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStore.swift; sourceTree = "<group>"; };
 		C9F47923559BF154343A645C /* AskImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskImageView.swift; sourceTree = "<group>"; };
 		CAF88F19C00AFCC4E6D14286 /* ThinkingBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThinkingBubble.swift; sourceTree = "<group>"; };
-		CE8B782DE3CA36EE2DFFC108 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		CE8B782DE3CA36EE2DFFC108 /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		CF33D2F7C22854604629ACB1 /* AppMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMode.swift; sourceTree = "<group>"; };
 		D01656EEBEE545751A40F3BB /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
 		D517A5BADACA08C5953283CF /* SkillListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillListView.swift; sourceTree = "<group>"; };
@@ -254,7 +254,7 @@
 		84D6D2F4436A835EAC88BF0E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				481998931D0EE39B873C7B63 /* GreyVctrAI.app */,
+				481998931D0EE39B873C7B63 /* GreyVctr AI.app */,
 				8ED731DA9E68AA1ED46030A3 /* GreyVctrAITests.xctest */,
 			);
 			name = Products;
@@ -375,7 +375,7 @@
 				CA0092E0D494DC373FBE1A27 /* LaTeXSwiftUI */,
 			);
 			productName = GreyVctrAI;
-			productReference = 481998931D0EE39B873C7B63 /* GreyVctrAI.app */;
+			productReference = 481998931D0EE39B873C7B63 /* GreyVctr AI.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -385,7 +385,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 2710;
 				TargetAttributes = {
 					B1814E0FDE76FE1BD1381419 = {
 						DevelopmentTeam = C8BDQ98823;
@@ -548,7 +548,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Sources/GreyVctrAI.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 75;
+				CURRENT_PROJECT_VERSION = 76;
 				DEVELOPMENT_TEAM = C8BDQ98823;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "GreyVctr AI";
@@ -567,9 +567,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.1;
-				OTHER_LDFLAGS = (
-					"-lc++",
-				);
+				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_BUNDLE_IDENTIFIER = com.guardai.ios;
 				PRODUCT_MODULE_NAME = GreyVctrAI;
 				PRODUCT_NAME = "GreyVctr AI";
@@ -632,6 +630,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.9;
@@ -644,7 +643,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Sources/GreyVctrAI.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 75;
+				CURRENT_PROJECT_VERSION = 76;
 				DEVELOPMENT_TEAM = C8BDQ98823;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "GreyVctr AI";
@@ -663,9 +662,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.1;
-				OTHER_LDFLAGS = (
-					"-lc++",
-				);
+				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_BUNDLE_IDENTIFIER = com.guardai.ios;
 				PRODUCT_MODULE_NAME = GreyVctrAI;
 				PRODUCT_NAME = "GreyVctr AI";
@@ -735,6 +732,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.9;

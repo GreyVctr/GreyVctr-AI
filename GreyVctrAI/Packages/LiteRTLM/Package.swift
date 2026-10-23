@@ -11,17 +11,15 @@ let package = Package(
         .library(name: "LiteRTLM", targets: ["LiteRTLM"])
     ],
     targets: [
-        // v0.17.1 republishes the v0.17.0 Apple binaries with identical checksums.
-        // See the README's SPM dependency note for the native tool-call fix limitation.
         .binaryTarget(
             name: "CLiteRTLM",
-            url: "https://github.com/google-ai-edge/LiteRT-LM/releases/download/v0.17.1/CLiteRTLM.xcframework.zip",
-            checksum: "c94fc12aa0403cb47208e419cc3bfe258214ea17035f7a63c16de536869f2186"
+            url: "https://github.com/google-ai-edge/LiteRT-LM/releases/download/v0.18.1/CLiteRTLM.xcframework.zip",
+            checksum: "5c51905e38c77ccc611dc2f8c2af6cf5144621046f1dde6518aab83f78488937"
         ),
         .binaryTarget(
             name: "CLiteRTLM_mac",
-            url: "https://github.com/google-ai-edge/LiteRT-LM/releases/download/v0.17.1/CLiteRTLM_mac.xcframework.zip",
-            checksum: "83efd536485c9d58fcd7fb7d4556ddb16ca46bb775b0449d08d9825c6836c1a4"
+            url: "https://github.com/google-ai-edge/LiteRT-LM/releases/download/v0.18.1/CLiteRTLM_mac.xcframework.zip",
+            checksum: "91b8c968fb61486c3eb6b0e7a6a1dfa32181efd4f2e5df14fb8bb5746dd8dd9f"
         ),
         .target(
             name: "LiteRTLM",
