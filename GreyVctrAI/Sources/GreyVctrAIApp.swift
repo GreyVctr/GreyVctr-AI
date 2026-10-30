@@ -131,13 +131,13 @@ struct GreyVctrAIApp: App {
 
             // Experimental flags are silently ignored unless we opt in first.
             // Every ExperimentalFlags setter is guarded by `optedIn`; without this
-            // call, the assignments below (including speculative decoding) are no-ops.
+            // call, the constrained decoding assignment below is a no-op.
             // Idempotent, so safe to call on every engine (re)load.
             ExperimentalFlags.optIntoExperimentalAPIs()
 
             // Enable Multi-Token Prediction for faster decode on GPU.
-            // Read when the Engine is created below.
-            ExperimentalFlags.enableSpeculativeDecoding = true
+            // Apply the setting to every engine, including fallback configurations.
+            let speculativeDecodingConfig = SpeculativeDecodingConfig(mode: .on)
 
             // Force well-formed tool-call output from Gemma 4. Without constrained
             // decoding the model can drop the closing `<|"|>` token when a tool
@@ -152,7 +152,8 @@ struct GreyVctrAIApp: App {
                 backend: .cpu(),
                 visionBackend: .cpu(),
                 maxNumTokens: kvCacheSize,
-                cacheDir: cacheDir
+                cacheDir: cacheDir,
+                speculativeDecodingConfig: speculativeDecodingConfig
             )
             let cpuEngine = Engine(engineConfig: cpuConfig)
             try await cpuEngine.initialize()
@@ -171,7 +172,8 @@ struct GreyVctrAIApp: App {
                     backend: .cpu(),
                     visionBackend: .cpu(),
                     maxNumTokens: kvCacheSize,
-                    cacheDir: cacheDir
+                    cacheDir: cacheDir,
+                    speculativeDecodingConfig: speculativeDecodingConfig
                 )
                 let cpuEngine = Engine(engineConfig: cpuConfig)
                 try await cpuEngine.initialize()
@@ -188,7 +190,8 @@ struct GreyVctrAIApp: App {
                         backend: .gpu,
                         visionBackend: .gpu,
                         maxNumTokens: kvCacheSize,
-                        cacheDir: cacheDir
+                        cacheDir: cacheDir,
+                        speculativeDecodingConfig: speculativeDecodingConfig
                     )
                     let gpuEngine = Engine(engineConfig: gpuConfig)
                     try await gpuEngine.initialize()
@@ -207,7 +210,8 @@ struct GreyVctrAIApp: App {
                             backend: .gpu,
                             visionBackend: .cpu(),
                             maxNumTokens: kvCacheSize,
-                            cacheDir: cacheDir
+                            cacheDir: cacheDir,
+                            speculativeDecodingConfig: speculativeDecodingConfig
                         )
                         let hybridEngine = Engine(engineConfig: hybridConfig)
                         try await hybridEngine.initialize()
@@ -226,7 +230,8 @@ struct GreyVctrAIApp: App {
                             backend: .cpu(),
                             visionBackend: .cpu(),
                             maxNumTokens: kvCacheSize,
-                            cacheDir: cacheDir
+                            cacheDir: cacheDir,
+                            speculativeDecodingConfig: speculativeDecodingConfig
                         )
                         let cpuEngine = Engine(engineConfig: cpuConfig)
                         try await cpuEngine.initialize()
