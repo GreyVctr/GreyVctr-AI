@@ -7,6 +7,7 @@ import OSLog
 /// A gear icon in the toolbar opens SkillsConfigView to manage which skills are active.
 struct SkillsChatView: View {
     @Environment(AppState.self) private var appState
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var viewModel: SkillsChatViewModel?
     @State private var showConfig = false
     @State private var showHistory = false
@@ -244,7 +245,9 @@ struct SkillsChatView: View {
     }
 
     private var inputBar: some View {
-        HStack(spacing: 12) {
+        (dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .trailing, spacing: 12))
+            : AnyLayout(HStackLayout(spacing: 12))) {
             TextField("Message…", text: Binding(
                 get: { viewModel?.currentInput ?? "" },
                 set: { viewModel?.currentInput = $0 }
@@ -268,10 +271,12 @@ struct SkillsChatView: View {
                         Image(systemName: "hourglass")
                             .font(.title3)
                             .foregroundStyle(.red)
+                            .frame(minWidth: 44, minHeight: 44)
                     } else {
                         Image(systemName: "stop.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.red)
+                            .frame(minWidth: 44, minHeight: 44)
                     }
                 }
                 .disabled(viewModel?.isStopping ?? false)
@@ -282,6 +287,7 @@ struct SkillsChatView: View {
                 } label: {
                     Image(systemName: "arrow.up.circle.fill")
                         .font(.title2)
+                        .frame(minWidth: 44, minHeight: 44)
                 }
                 .disabled(!canSendMessage)
                 .accessibilityLabel("Send message")

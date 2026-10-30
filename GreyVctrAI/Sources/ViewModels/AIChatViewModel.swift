@@ -608,21 +608,17 @@ final class AIChatViewModel {
         do {
             var lastUIUpdate = Date.distantPast
             for try await chunk in conversation.sendMessageStream(message) {
-                if let firstContent = chunk.contents.first {
-                    switch firstContent {
-                    case .text(let text):
-                        await watchdog.markTokenProgress()
-                        streamedOutput += text
-                        let now = Date()
-                        if now.timeIntervalSince(lastUIUpdate) >= Self.streamUIUpdateInterval {
-                            lastUIUpdate = now
-                            let snapshot = streamedOutput
-                            await MainActor.run {
-                                update(.setStreamingContent(snapshot))
-                            }
+                let text = Self.streamedText(in: chunk)
+                if !text.isEmpty {
+                    await watchdog.markTokenProgress()
+                    streamedOutput += text
+                    let now = Date()
+                    if now.timeIntervalSince(lastUIUpdate) >= Self.streamUIUpdateInterval {
+                        lastUIUpdate = now
+                        let snapshot = streamedOutput
+                        await MainActor.run {
+                            update(.setStreamingContent(snapshot))
                         }
-                    default:
-                        break
                     }
                 }
             }
@@ -648,6 +644,13 @@ final class AIChatViewModel {
             await sessionCoordinator.releaseConversation(for: .aiChat)
             throw error
         }
+    }
+
+    static func streamedText(in message: Message) -> String {
+        message.contents.compactMap { content in
+            if case .text(let text) = content { return text }
+            return nil
+        }.joined()
     }
 
     private actor StopSignal {
@@ -856,7 +859,8 @@ final class AIChatViewModel {
 
         return ConversationConfig(
             systemMessage: systemMessage,
-            samplerConfig: samplerConfig
+            samplerConfig: samplerConfig,
+            enableConstrainedDecoding: false
         )
     }
 

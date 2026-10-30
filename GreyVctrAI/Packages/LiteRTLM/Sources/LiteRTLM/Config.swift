@@ -267,6 +267,9 @@ public struct ConversationConfig {
   public let thinkingConfig: ThinkingConfig?
   public let automaticToolCalling: Bool
   public let enableResponseFormat: Bool
+  /// Overrides the experimental global constrained-decoding setting for this conversation.
+  /// `nil` preserves the existing global setting.
+  public let enableConstrainedDecoding: Bool?
   public let visualTokenBudget: Int32?
   /// The speculative decoding configuration for this conversation, which overrides
   /// `EngineConfig.speculativeDecodingConfig`. Fields left `nil` inherit the engine's values.
@@ -315,6 +318,7 @@ public struct ConversationConfig {
     thinkingConfig: ThinkingConfig? = nil,
     automaticToolCalling: Bool = true,
     enableResponseFormat: Bool = false,
+    enableConstrainedDecoding: Bool? = nil,
     visualTokenBudget: Int32? = nil,
     speculativeDecodingConfig: SpeculativeDecodingConfig? = nil,
     chatTemplate: String? = nil
@@ -335,6 +339,7 @@ public struct ConversationConfig {
     self.thinkingConfig = thinkingConfig
     self.automaticToolCalling = automaticToolCalling
     self.enableResponseFormat = enableResponseFormat
+    self.enableConstrainedDecoding = enableConstrainedDecoding
     self.visualTokenBudget = visualTokenBudget
     self.speculativeDecodingConfig = speculativeDecodingConfig
     self.chatTemplate = chatTemplate

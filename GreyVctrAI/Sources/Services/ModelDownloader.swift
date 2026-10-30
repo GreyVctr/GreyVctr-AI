@@ -172,6 +172,15 @@ final class ModelDownloader: NSObject, @unchecked Sendable {
             .appendingPathComponent("LiteRTLM/Models", isDirectory: true)
         super.init()
 
+        // Existing installs may predate backup exclusion.
+        if isDownloaded {
+            do {
+                try excludeModelFromBackup()
+            } catch {
+                Self.log.error("Could not exclude existing model from backup: \(error.localizedDescription)")
+            }
+        }
+
         if isDownloaded {
             status = .completed
             totalBytes = installedMetadata?.sizeInBytes ?? Self.currentModel.sizeInBytes
@@ -590,6 +599,12 @@ extension ModelDownloader: URLSessionDownloadDelegate {
                 try FileManager.default.moveItem(at: stagedModelPath, to: modelPath)
             }
 
+            do {
+                try excludeModelFromBackup()
+            } catch {
+                Self.log.error("Could not exclude model from backup: \(error.localizedDescription)")
+            }
+
             Self.log.info("Download completed")
             clearResumeData()
             let manifest = withLock { pendingManifest ?? Self.currentModel }
@@ -606,6 +621,13 @@ extension ModelDownloader: URLSessionDownloadDelegate {
             }
             finish(result: .failure(DownloadError.fileOperationFailed(error.localizedDescription)))
         }
+    }
+
+    private func excludeModelFromBackup() throws {
+        var values = URLResourceValues()
+        values.isExcludedFromBackup = true
+        var url = modelPath
+        try url.setResourceValues(values)
     }
 
     func urlSession(

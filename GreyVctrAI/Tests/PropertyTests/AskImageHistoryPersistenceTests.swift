@@ -66,6 +66,7 @@ final class MockHistoryStore: HistoryStoreProtocol {
 /// A mock config loader that returns default InferenceConfig values.
 final class MockConfigLoader: InferenceConfigLoaderProtocol {
     var configToReturn: InferenceConfig = .defaults
+    var checkForModelUpdates = false
 
     func load() -> InferenceConfig {
         return configToReturn

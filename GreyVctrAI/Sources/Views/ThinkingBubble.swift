@@ -29,6 +29,8 @@ struct ThinkingBubble: View {
                     }
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(isExpanded ? "Collapse thinking" : "Expand thinking")
+                .accessibilityHint("Shows the model's reasoning text")
 
                 // Expanded raw content
                 if isExpanded {

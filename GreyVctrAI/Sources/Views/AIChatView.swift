@@ -5,42 +5,39 @@ struct AIChatView: View {
     private let visibleMessageLimit = 15
 
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(AppState.self) private var appState
     @State private var viewModel: AIChatViewModel?
     @State private var pendingScrollTask: Task<Void, Never>?
+    @State private var lastStreamingScroll = Date.distantPast
+    @State private var messageContentOverflows = false
     @State private var showHistory = false
     @FocusState private var isInputFocused: Bool
 
     var body: some View {
-        Group {
-            if scenePhase == .active {
-                VStack(spacing: 0) {
-                    contextUsageView
+        VStack(spacing: 0) {
+            contextUsageView
 
-                    messageList
+            messageList
 
-                    if let errorMessage = viewModel?.error {
-                        if isSessionLostError(errorMessage) {
-                            ActionableErrorBanner(
-                                message: errorMessage,
-                                actionLabel: "Reload Engine",
-                                systemImage: "arrow.clockwise"
-                            ) {
-                                viewModel?.newConversation()
-                                appState.requestEngineReload()
-                            }
-                            .padding(.horizontal)
-                        } else {
-                            ErrorBanner(message: errorMessage)
-                                .padding(.horizontal)
-                        }
+            if let errorMessage = viewModel?.error {
+                if isSessionLostError(errorMessage) {
+                    ActionableErrorBanner(
+                        message: errorMessage,
+                        actionLabel: "Reload Engine",
+                        systemImage: "arrow.clockwise"
+                    ) {
+                        viewModel?.newConversation()
+                        appState.requestEngineReload()
                     }
-
-                    inputBar
+                    .padding(.horizontal)
+                } else {
+                    ErrorBanner(message: errorMessage)
+                        .padding(.horizontal)
                 }
-            } else {
-                Color(.systemBackground)
             }
+
+            inputBar
         }
         .navigationTitle("AI Chat")
         .onAppear { setupViewModel() }
@@ -153,22 +150,37 @@ struct AIChatView: View {
                 }
                 .padding()
             }
+            .onScrollGeometryChange(for: Bool.self) { geometry in
+                geometry.contentSize.height > geometry.containerSize.height + 1
+            } action: { _, overflows in
+                messageContentOverflows = overflows
+                if overflows, viewModel?.isGenerating ?? false {
+                    scheduleScrollToBottom(proxy, animated: false)
+                }
+            }
             .onChange(of: viewModel?.messages.count ?? 0) { _, _ in
-                scheduleScrollToBottom(proxy, animated: true)
+                if shouldAutoScroll {
+                    scheduleScrollToBottom(proxy, animated: true)
+                }
             }
             .onChange(of: viewModel?.streamingContent ?? "") { _, _ in
-                if viewModel?.isGenerating ?? false {
+                if viewModel?.isGenerating ?? false,
+                   shouldAutoScroll,
+                   Date().timeIntervalSince(lastStreamingScroll) >= 0.25 {
+                    lastStreamingScroll = Date()
                     scheduleScrollToBottom(proxy, animated: false)
                 }
             }
             .onChange(of: viewModel?.isGenerating ?? false) { _, isGenerating in
-                if isGenerating {
-                    scheduleScrollToBottom(proxy, animated: false)
-                } else {
-                    scheduleScrollToBottom(proxy, animated: true)
+                if shouldAutoScroll {
+                    scheduleScrollToBottom(proxy, animated: !isGenerating)
                 }
             }
         }
+    }
+
+    private var shouldAutoScroll: Bool {
+        messageContentOverflows || (viewModel?.messages.count ?? 0) > 2
     }
 
     private func streamingBubble(content: String) -> some View {
@@ -221,7 +233,9 @@ struct AIChatView: View {
     }
 
     private var inputBar: some View {
-        HStack(spacing: 12) {
+        (dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .trailing, spacing: 12))
+            : AnyLayout(HStackLayout(spacing: 12))) {
             TextField("Message…", text: Binding(
                 get: { viewModel?.currentInput ?? "" },
                 set: { viewModel?.currentInput = $0 }
@@ -246,10 +260,12 @@ struct AIChatView: View {
                         Image(systemName: "hourglass")
                             .font(.title3)
                             .foregroundStyle(.red)
+                            .frame(minWidth: 44, minHeight: 44)
                     } else {
                         Image(systemName: "stop.circle.fill")
                             .font(.title2)
                             .foregroundStyle(.red)
+                            .frame(minWidth: 44, minHeight: 44)
                     }
                 }
                 .disabled(viewModel?.isStopping ?? false)
@@ -261,6 +277,7 @@ struct AIChatView: View {
                 } label: {
                     Image(systemName: "arrow.up.circle.fill")
                         .font(.title2)
+                        .frame(minWidth: 44, minHeight: 44)
                 }
                 .disabled(!canSendMessage)
                 .accessibilityLabel("Send message")
